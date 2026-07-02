@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NEXU Ember
 
-## Getting Started
+Рабочая тетрадь по методу снежинки — для фанфиков, книг и лекций/выступлений. Часть экосистемы [NEXU](#).
 
-First, run the development server:
+## Что это
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+От одной фразы-искры до готовой структуры: концепция, катастрофы/повороты, герои, синопсис, таймлайн, заметки — и отдельные модули под лекции (учебные результаты, банк вопросов, чек-лист материалов) и под прозу (карта связей персонажей, редактор глав).
+
+Один и тот же движок карточек и модулей подстраивается под три типа проекта:
+- **Фанфик** / **Книга** — концепция, катастрофы, герои, связи между ними, синопсис, таймлайн, редактор глав, заметки
+- **Выступление** — концепция с учебными результатами (таксономия Блума), герои-аудитория, синопсис, раскадровка с хронометражем, банк вопросов, чек-лист материалов, заметки
+
+## Стек
+
+- **Next.js 15+ (App Router) + TypeScript**
+- **Supabase** — Postgres, Auth (magic link), Storage, Row Level Security
+- Без внешних UI-библиотек — инлайн-стили на CSS-переменных (`styles/tokens.css`)
+- Форматирование текста глав — нативный `contentEditable` + `document.execCommand`, без сторонних редакторов
+
+## Структура
+
+```
+apps/web/
+├── app/
+│   ├── (auth)/login/              # вход по magic link
+│   ├── auth/callback/             # обмен кода на сессию
+│   └── (workspace)/[workspaceSlug]/
+│       ├── page.tsx               # дашборд воркспейса
+│       ├── new/                   # создание проекта
+│       └── [projectId]/           # хаб проекта + все модули
+│           ├── spark/             # концепция
+│           ├── quake/             # катастрофы (только фанфик/книга)
+│           ├── cast/              # герои / аудитория
+│           ├── relations/         # карта связей (только фанфик/книга)
+│           ├── scroll/            # синопсис
+│           ├── thread/            # таймлайн / раскадровка
+│           ├── write/             # редактор глав (только фанфик/книга)
+│           ├── qa/                # банк вопросов (только выступление)
+│           ├── materials/         # материалы и техника (только выступление)
+│           └── ash/               # заметки
+├── components/
+│   ├── layout/                    # сайдбар, табы, шапка проекта
+│   ├── modules/                   # логика каждого модуля
+│   └── forms/                     # форма создания проекта
+├── lib/supabase/                  # клиенты для браузера и сервера
+└── middleware.ts                  # обновление сессии на каждый запрос
+
+supabase/migrations/               # вся схема базы по порядку
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Схема данных
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Основные сущности: `workspaces` → `memberships` (роли owner/editor/viewer) → `projects` → `modules`/`cards`/`blocks`/`timeline_events`, плюс связи `card_links`, `block_card_links`, `timeline_card_links`. Один и тот же `cards.type` определяет, что это — герой, катастрофа, вопрос или пункт чек-листа, конкретные поля живут в `cards.fields` (jsonb).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MVP в активной разработке. Из планов: загрузка фото через полноценный `Storage`-флоу для большего числа сущностей, вовлечение аудитории (опросы/энергизаторы) и заметки после выступления для лекционных проектов, карта курса для связывания нескольких лекций между собой.
