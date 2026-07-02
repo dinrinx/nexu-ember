@@ -1,0 +1,60 @@
+/* styles/tokens.css */
+/* Светлая дашборд-эстетика: белый / оранжевый / чёрный, Helvetica.
+   Никаких внешних шрифтов — Helvetica Neue есть в системе на Mac,
+   Arial — надёжный фолбэк везде остальном. */
+
+:root {
+  --bg: #ffffff;
+  --bg-page: #f6f5f2;
+  --surface: #ffffff;
+  --border: #ebe8e1;
+  --border-strong: #d9d5cb;
+
+  --ink: #141414;
+  --ink-dim: #6b6b66;
+  --ink-faint: #a3a09a;
+
+  --accent: #ff5a1f;
+  --accent-soft: #fff1e8;
+  --accent-dim: #c94411;
+
+  --black: #141414;
+
+  --radius-card: 18px;
+  --radius-pill: 999px;
+  --radius-sm: 8px;
+
+  --shadow-card:
+    0 1px 2px rgba(20, 20, 20, 0.04), 0 8px 24px rgba(20, 20, 20, 0.06);
+
+  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* --- Бейджи типов проекта и статусов (из редизайна Claude Design) --- */
+:root {
+  --type-fanfic-bg: #ffdcc2;
+  --type-fanfic-fg: #b5551e;
+  --type-fanfic-dot: #ff5a1f;
+
+  --type-book-bg: #d9d3ff;
+  --type-book-fg: #4a3c9e;
+  --type-book-dot: #8a7be8;
+
+  --type-talk-bg: #c7e8ff;
+  --type-talk-fg: #1e6a99;
+  --type-talk-dot: #5fb4e8;
+
+  --status-draft-bg: #ffd3e4;
+  --status-draft-fg: #a83567;
+  --status-progress-bg: #e3f27a;
+  --status-progress-fg: #5a6b0e;
+  --status-done-bg: #c9f2dd;
+  --status-done-fg: #1e7a52;
+
+  --sidebar-bg: #141414;
+  --sidebar-surface: #1f1f1f;
+  --sidebar-surface-hover: #262626;
+  --sidebar-border: #2b2b2b;
+  --sidebar-ink: #ededea;
+  --sidebar-ink-dim: #8a8a85;
+}
