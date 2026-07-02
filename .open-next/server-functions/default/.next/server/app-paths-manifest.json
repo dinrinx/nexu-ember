@@ -1,0 +1,22 @@
+{
+  "/(auth)/login/page": "app/(auth)/login/page.js",
+  "/(workspace)/[workspaceSlug]/[projectId]/ash/page": "app/(workspace)/[workspaceSlug]/[projectId]/ash/page.js",
+  "/(workspace)/[workspaceSlug]/[projectId]/cast/page": "app/(workspace)/[workspaceSlug]/[projectId]/cast/page.js",
+  "/(workspace)/[workspaceSlug]/[projectId]/materials/page": "app/(workspace)/[workspaceSlug]/[projectId]/materials/page.js",
+  "/(workspace)/[workspaceSlug]/[projectId]/page": "app/(workspace)/[workspaceSlug]/[projectId]/page.js",
+  "/(workspace)/[workspaceSlug]/[projectId]/qa/page": "app/(workspace)/[workspaceSlug]/[projectId]/qa/page.js",
+  "/(workspace)/[workspaceSlug]/[projectId]/quake/page": "app/(workspace)/[workspaceSlug]/[projectId]/quake/page.js",
+  "/(workspace)/[workspaceSlug]/[projectId]/relations/page": "app/(workspace)/[workspaceSlug]/[projectId]/relations/page.js",
+  "/(workspace)/[workspaceSlug]/[projectId]/scroll/page": "app/(workspace)/[workspaceSlug]/[projectId]/scroll/page.js",
+  "/(workspace)/[workspaceSlug]/[projectId]/spark/page": "app/(workspace)/[workspaceSlug]/[projectId]/spark/page.js",
+  "/(workspace)/[workspaceSlug]/[projectId]/thread/page": "app/(workspace)/[workspaceSlug]/[projectId]/thread/page.js",
+  "/(workspace)/[workspaceSlug]/[projectId]/write/page": "app/(workspace)/[workspaceSlug]/[projectId]/write/page.js",
+  "/(workspace)/[workspaceSlug]/new/page": "app/(workspace)/[workspaceSlug]/new/page.js",
+  "/(workspace)/[workspaceSlug]/page": "app/(workspace)/[workspaceSlug]/page.js",
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/whoami/route": "app/api/whoami/route.js",
+  "/auth/callback/route": "app/auth/callback/route.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/page": "app/page.js"
+}

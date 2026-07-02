@@ -1,0 +1,22 @@
+{
+  "/(auth)/login/page": "/login",
+  "/(workspace)/[workspaceSlug]/[projectId]/ash/page": "/[workspaceSlug]/[projectId]/ash",
+  "/(workspace)/[workspaceSlug]/[projectId]/cast/page": "/[workspaceSlug]/[projectId]/cast",
+  "/(workspace)/[workspaceSlug]/[projectId]/materials/page": "/[workspaceSlug]/[projectId]/materials",
+  "/(workspace)/[workspaceSlug]/[projectId]/page": "/[workspaceSlug]/[projectId]",
+  "/(workspace)/[workspaceSlug]/[projectId]/qa/page": "/[workspaceSlug]/[projectId]/qa",
+  "/(workspace)/[workspaceSlug]/[projectId]/quake/page": "/[workspaceSlug]/[projectId]/quake",
+  "/(workspace)/[workspaceSlug]/[projectId]/relations/page": "/[workspaceSlug]/[projectId]/relations",
+  "/(workspace)/[workspaceSlug]/[projectId]/scroll/page": "/[workspaceSlug]/[projectId]/scroll",
+  "/(workspace)/[workspaceSlug]/[projectId]/spark/page": "/[workspaceSlug]/[projectId]/spark",
+  "/(workspace)/[workspaceSlug]/[projectId]/thread/page": "/[workspaceSlug]/[projectId]/thread",
+  "/(workspace)/[workspaceSlug]/[projectId]/write/page": "/[workspaceSlug]/[projectId]/write",
+  "/(workspace)/[workspaceSlug]/new/page": "/[workspaceSlug]/new",
+  "/(workspace)/[workspaceSlug]/page": "/[workspaceSlug]",
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/api/whoami/route": "/api/whoami",
+  "/auth/callback/route": "/auth/callback",
+  "/favicon.ico/route": "/favicon.ico",
+  "/page": "/"
+}

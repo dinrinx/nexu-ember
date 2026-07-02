@@ -1,0 +1,203 @@
+{
+  "version": 3,
+  "pages404": true,
+  "appType": "app",
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "priority": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [],
+  "onMatchHeaders": [],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [
+    {
+      "page": "/[workspaceSlug]",
+      "regex": "^/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPworkspaceSlug": "nxtPworkspaceSlug"
+      },
+      "namedRegex": "^/(?<nxtPworkspaceSlug>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/[workspaceSlug]/new",
+      "regex": "^/([^/]+?)/new(?:/)?$",
+      "routeKeys": {
+        "nxtPworkspaceSlug": "nxtPworkspaceSlug"
+      },
+      "namedRegex": "^/(?<nxtPworkspaceSlug>[^/]+?)/new(?:/)?$"
+    },
+    {
+      "page": "/[workspaceSlug]/[projectId]",
+      "regex": "^/([^/]+?)/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPworkspaceSlug": "nxtPworkspaceSlug",
+        "nxtPprojectId": "nxtPprojectId"
+      },
+      "namedRegex": "^/(?<nxtPworkspaceSlug>[^/]+?)/(?<nxtPprojectId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/[workspaceSlug]/[projectId]/ash",
+      "regex": "^/([^/]+?)/([^/]+?)/ash(?:/)?$",
+      "routeKeys": {
+        "nxtPworkspaceSlug": "nxtPworkspaceSlug",
+        "nxtPprojectId": "nxtPprojectId"
+      },
+      "namedRegex": "^/(?<nxtPworkspaceSlug>[^/]+?)/(?<nxtPprojectId>[^/]+?)/ash(?:/)?$"
+    },
+    {
+      "page": "/[workspaceSlug]/[projectId]/cast",
+      "regex": "^/([^/]+?)/([^/]+?)/cast(?:/)?$",
+      "routeKeys": {
+        "nxtPworkspaceSlug": "nxtPworkspaceSlug",
+        "nxtPprojectId": "nxtPprojectId"
+      },
+      "namedRegex": "^/(?<nxtPworkspaceSlug>[^/]+?)/(?<nxtPprojectId>[^/]+?)/cast(?:/)?$"
+    },
+    {
+      "page": "/[workspaceSlug]/[projectId]/materials",
+      "regex": "^/([^/]+?)/([^/]+?)/materials(?:/)?$",
+      "routeKeys": {
+        "nxtPworkspaceSlug": "nxtPworkspaceSlug",
+        "nxtPprojectId": "nxtPprojectId"
+      },
+      "namedRegex": "^/(?<nxtPworkspaceSlug>[^/]+?)/(?<nxtPprojectId>[^/]+?)/materials(?:/)?$"
+    },
+    {
+      "page": "/[workspaceSlug]/[projectId]/qa",
+      "regex": "^/([^/]+?)/([^/]+?)/qa(?:/)?$",
+      "routeKeys": {
+        "nxtPworkspaceSlug": "nxtPworkspaceSlug",
+        "nxtPprojectId": "nxtPprojectId"
+      },
+      "namedRegex": "^/(?<nxtPworkspaceSlug>[^/]+?)/(?<nxtPprojectId>[^/]+?)/qa(?:/)?$"
+    },
+    {
+      "page": "/[workspaceSlug]/[projectId]/quake",
+      "regex": "^/([^/]+?)/([^/]+?)/quake(?:/)?$",
+      "routeKeys": {
+        "nxtPworkspaceSlug": "nxtPworkspaceSlug",
+        "nxtPprojectId": "nxtPprojectId"
+      },
+      "namedRegex": "^/(?<nxtPworkspaceSlug>[^/]+?)/(?<nxtPprojectId>[^/]+?)/quake(?:/)?$"
+    },
+    {
+      "page": "/[workspaceSlug]/[projectId]/relations",
+      "regex": "^/([^/]+?)/([^/]+?)/relations(?:/)?$",
+      "routeKeys": {
+        "nxtPworkspaceSlug": "nxtPworkspaceSlug",
+        "nxtPprojectId": "nxtPprojectId"
+      },
+      "namedRegex": "^/(?<nxtPworkspaceSlug>[^/]+?)/(?<nxtPprojectId>[^/]+?)/relations(?:/)?$"
+    },
+    {
+      "page": "/[workspaceSlug]/[projectId]/scroll",
+      "regex": "^/([^/]+?)/([^/]+?)/scroll(?:/)?$",
+      "routeKeys": {
+        "nxtPworkspaceSlug": "nxtPworkspaceSlug",
+        "nxtPprojectId": "nxtPprojectId"
+      },
+      "namedRegex": "^/(?<nxtPworkspaceSlug>[^/]+?)/(?<nxtPprojectId>[^/]+?)/scroll(?:/)?$"
+    },
+    {
+      "page": "/[workspaceSlug]/[projectId]/spark",
+      "regex": "^/([^/]+?)/([^/]+?)/spark(?:/)?$",
+      "routeKeys": {
+        "nxtPworkspaceSlug": "nxtPworkspaceSlug",
+        "nxtPprojectId": "nxtPprojectId"
+      },
+      "namedRegex": "^/(?<nxtPworkspaceSlug>[^/]+?)/(?<nxtPprojectId>[^/]+?)/spark(?:/)?$"
+    },
+    {
+      "page": "/[workspaceSlug]/[projectId]/thread",
+      "regex": "^/([^/]+?)/([^/]+?)/thread(?:/)?$",
+      "routeKeys": {
+        "nxtPworkspaceSlug": "nxtPworkspaceSlug",
+        "nxtPprojectId": "nxtPprojectId"
+      },
+      "namedRegex": "^/(?<nxtPworkspaceSlug>[^/]+?)/(?<nxtPprojectId>[^/]+?)/thread(?:/)?$"
+    },
+    {
+      "page": "/[workspaceSlug]/[projectId]/write",
+      "regex": "^/([^/]+?)/([^/]+?)/write(?:/)?$",
+      "routeKeys": {
+        "nxtPworkspaceSlug": "nxtPworkspaceSlug",
+        "nxtPprojectId": "nxtPprojectId"
+      },
+      "namedRegex": "^/(?<nxtPworkspaceSlug>[^/]+?)/(?<nxtPprojectId>[^/]+?)/write(?:/)?$"
+    }
+  ],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_global-error",
+      "regex": "^/_global\\-error(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_global\\-error(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/api/whoami",
+      "regex": "^/api/whoami(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/whoami(?:/)?$"
+    },
+    {
+      "page": "/auth/callback",
+      "regex": "^/auth/callback(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/auth/callback(?:/)?$"
+    },
+    {
+      "page": "/favicon.ico",
+      "regex": "^/favicon\\.ico(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/favicon\\.ico(?:/)?$"
+    },
+    {
+      "page": "/login",
+      "regex": "^/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/login(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments",
+    "clientParamParsing": false,
+    "dynamicRSCPrerender": false
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}
