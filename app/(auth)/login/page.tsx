@@ -1,28 +1,74 @@
 "use client";
 
 // app/(auth)/login/page.tsx
-// Двухколоночный логин по редизайну: тёмная брендовая панель слева, форма справа.
+// Вход по одноразовому коду из письма (вместо ссылки) — код вводится прямо
+// в форме, без перехода на отдельный /auth/callback. Полностью происходит
+// в браузере, поэтому не зависит от особенностей серверного окружения.
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [step, setStep] = useState<"email" | "code">("email");
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
-    "idle",
-  );
+  const [code, setCode] = useState("");
+  const [status, setStatus] = useState<
+    "idle" | "sending" | "sent" | "verifying" | "error"
+  >("idle");
+  const [errorMsg, setErrorMsg] = useState("");
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSendCode(e: React.FormEvent) {
     e.preventDefault();
     setStatus("sending");
+    setErrorMsg("");
 
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+      options: { shouldCreateUser: true },
     });
 
-    setStatus(error ? "error" : "sent");
+    if (error) {
+      setStatus("error");
+      setErrorMsg(error.message);
+      return;
+    }
+
+    setStatus("sent");
+    setStep("code");
+  }
+
+  async function handleVerifyCode(e: React.FormEvent) {
+    e.preventDefault();
+    setStatus("verifying");
+    setErrorMsg("");
+
+    const supabase = createClient();
+    const { data, error } = await supabase.auth.verifyOtp({
+      email,
+      token: code,
+      type: "email",
+    });
+
+    if (error || !data.user) {
+      setStatus("error");
+      setErrorMsg(error?.message ?? "Не получилось подтвердить код");
+      return;
+    }
+
+    // ищем первый воркспейс юзера и ведём сразу туда
+    const { data: membership } = await supabase
+      .from("memberships")
+      .select("workspaces(slug)")
+      .eq("user_id", data.user.id)
+      .limit(1)
+      .maybeSingle();
+
+    const slug = (membership?.workspaces as any)?.slug;
+    router.push(slug ? `/${slug}` : "/");
+    router.refresh();
   }
 
   return (
@@ -40,290 +86,185 @@ export default function LoginPage() {
       <div
         style={{
           width: "100%",
-          maxWidth: "920px",
-          display: "grid",
-          gridTemplateColumns: "1.1fr 1fr",
-          borderRadius: "28px",
-          overflow: "hidden",
-          boxShadow: "0 24px 60px rgba(20,20,20,0.12)",
+          maxWidth: "400px",
           background: "#fff",
+          borderRadius: "24px",
+          padding: "44px",
+          boxShadow: "0 24px 60px rgba(20,20,20,0.12)",
         }}
       >
-        {/* левая тёмная панель — бренд */}
         <div
           style={{
-            background: "var(--sidebar-bg)",
-            color: "var(--sidebar-ink)",
-            padding: "48px 44px",
             display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            minHeight: "520px",
+            alignItems: "center",
+            gap: "10px",
+            marginBottom: "28px",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "11px" }}>
-            <span
-              style={{
-                width: "22px",
-                height: "22px",
-                borderRadius: "50%",
-                background: "var(--accent)",
-                display: "inline-block",
-                boxShadow: "0 0 0 4px rgba(255,90,31,0.18)",
-              }}
-            />
-            <span
-              style={{
-                fontSize: "17px",
-                fontWeight: 700,
-                letterSpacing: "-0.2px",
-              }}
-            >
-              NEXU Ember
-            </span>
-          </div>
+          <span
+            style={{
+              width: "18px",
+              height: "18px",
+              borderRadius: "50%",
+              background: "var(--accent)",
+              display: "inline-block",
+            }}
+          />
+          <span style={{ fontSize: "15px", fontWeight: 700 }}>NEXU Ember</span>
+        </div>
 
-          <div>
-            <div
+        {step === "email" ? (
+          <form onSubmit={handleSendCode}>
+            <h1
               style={{
-                fontSize: "11px",
+                fontSize: "22px",
                 fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: "1.4px",
-                color: "var(--sidebar-ink-dim)",
-                marginBottom: "16px",
+                letterSpacing: "-0.4px",
+                margin: "0 0 8px",
               }}
             >
-              Метод снежинки
-            </div>
-            <div
-              style={{
-                fontSize: "30px",
-                fontWeight: 700,
-                lineHeight: 1.2,
-                letterSpacing: "-0.5px",
-              }}
-            >
-              От искры замысла
-              <br />
-              до готовой структуры
-            </div>
+              Вход
+            </h1>
             <p
               style={{
                 fontSize: "14px",
                 lineHeight: 1.6,
-                color: "var(--sidebar-ink-dim)",
-                margin: "18px 0 0",
-                maxWidth: "320px",
+                color: "var(--ink-dim)",
+                margin: "0 0 24px",
               }}
             >
-              Рабочая тетрадь для фанфиков, книг и выступлений. Шесть модулей,
-              которые разворачивают идею в сюжет.
+              Пришлём код на почту — без пароля.
             </p>
-          </div>
-
-          <div style={{ display: "flex", gap: "8px" }}>
-            <span
+            <label style={labelStyle}>Email</label>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              style={inputStyle}
+            />
+            <button
+              type="submit"
+              disabled={status === "sending"}
+              style={buttonStyle}
+            >
+              {status === "sending" ? "Отправляю…" : "Получить код"}
+            </button>
+            {status === "error" && <p style={errorStyle}>{errorMsg}</p>}
+          </form>
+        ) : (
+          <form onSubmit={handleVerifyCode}>
+            <h1
               style={{
-                width: "26px",
-                height: "26px",
-                borderRadius: "50%",
-                background: "var(--type-fanfic-bg)",
-                border: "2px solid var(--sidebar-bg)",
+                fontSize: "22px",
+                fontWeight: 700,
+                letterSpacing: "-0.4px",
+                margin: "0 0 8px",
+              }}
+            >
+              Введите код
+            </h1>
+            <p
+              style={{
+                fontSize: "14px",
+                lineHeight: 1.6,
+                color: "var(--ink-dim)",
+                margin: "0 0 24px",
+              }}
+            >
+              Отправили 6-значный код на <strong>{email}</strong>
+            </p>
+            <label style={labelStyle}>Код из письма</label>
+            <input
+              type="text"
+              inputMode="numeric"
+              autoFocus
+              required
+              value={code}
+              onChange={(e) =>
+                setCode(e.target.value.replace(/\D/g, "").slice(0, 6))
+              }
+              placeholder="123456"
+              style={{
+                ...inputStyle,
+                fontSize: "22px",
+                letterSpacing: "6px",
+                textAlign: "center",
               }}
             />
-            <span
-              style={{
-                width: "26px",
-                height: "26px",
-                borderRadius: "50%",
-                background: "var(--type-book-bg)",
-                border: "2px solid var(--sidebar-bg)",
-                marginLeft: "-10px",
+            <button
+              type="submit"
+              disabled={status === "verifying" || code.length < 6}
+              style={buttonStyle}
+            >
+              {status === "verifying" ? "Проверяю…" : "Войти"}
+            </button>
+            {status === "error" && <p style={errorStyle}>{errorMsg}</p>}
+            <button
+              type="button"
+              onClick={() => {
+                setStep("email");
+                setCode("");
+                setStatus("idle");
               }}
-            />
-            <span
               style={{
-                width: "26px",
-                height: "26px",
-                borderRadius: "50%",
-                background: "var(--type-talk-bg)",
-                border: "2px solid var(--sidebar-bg)",
-                marginLeft: "-10px",
+                width: "100%",
+                background: "transparent",
+                border: "none",
+                color: "var(--ink-faint)",
+                fontSize: "13px",
+                marginTop: "16px",
+                cursor: "pointer",
+                fontFamily: "var(--font-sans)",
               }}
-            />
-          </div>
-        </div>
-
-        {/* правая часть — форма */}
-        <div
-          style={{
-            padding: "48px 44px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-          }}
-        >
-          {status === "sent" ? (
-            <div>
-              <div
-                style={{
-                  width: "52px",
-                  height: "52px",
-                  borderRadius: "50%",
-                  background: "var(--status-done-bg)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginBottom: "22px",
-                }}
-              >
-                <span style={{ fontSize: "22px" }}>✓</span>
-              </div>
-              <h1
-                style={{
-                  fontSize: "24px",
-                  fontWeight: 700,
-                  letterSpacing: "-0.4px",
-                  margin: "0 0 10px",
-                }}
-              >
-                Письмо отправлено
-              </h1>
-              <p
-                style={{
-                  fontSize: "14px",
-                  lineHeight: 1.6,
-                  color: "var(--ink-dim)",
-                  margin: "0 0 6px",
-                }}
-              >
-                Ссылка для входа отправлена на
-              </p>
-              <p
-                style={{
-                  fontSize: "14px",
-                  fontWeight: 700,
-                  margin: "0 0 26px",
-                }}
-              >
-                {email}
-              </p>
-              <button
-                onClick={() => setStatus("idle")}
-                style={{
-                  width: "100%",
-                  background: "transparent",
-                  color: "var(--ink-dim)",
-                  border: "1px solid var(--border-strong)",
-                  borderRadius: "999px",
-                  padding: "14px",
-                  fontWeight: 700,
-                  fontSize: "13px",
-                  cursor: "pointer",
-                }}
-              >
-                Отправить снова
-              </button>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit}>
-              <h1
-                style={{
-                  fontSize: "24px",
-                  fontWeight: 700,
-                  letterSpacing: "-0.4px",
-                  margin: "0 0 8px",
-                }}
-              >
-                Вход
-              </h1>
-              <p
-                style={{
-                  fontSize: "14px",
-                  lineHeight: 1.6,
-                  color: "var(--ink-dim)",
-                  margin: "0 0 26px",
-                }}
-              >
-                Введите email — пришлём ссылку для входа без пароля.
-              </p>
-              <label
-                style={{
-                  fontSize: "11px",
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "1.2px",
-                  color: "var(--ink-faint)",
-                  display: "block",
-                  marginBottom: "8px",
-                }}
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                style={{
-                  width: "100%",
-                  border: "1px solid var(--border)",
-                  borderRadius: "14px",
-                  padding: "14px 16px",
-                  fontSize: "15px",
-                  background: "var(--bg-page)",
-                  outline: "none",
-                  marginBottom: "18px",
-                  fontFamily: "var(--font-sans)",
-                  color: "var(--ink)",
-                }}
-              />
-              <button
-                type="submit"
-                disabled={status === "sending"}
-                style={{
-                  width: "100%",
-                  background: "var(--black)",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "999px",
-                  padding: "14px",
-                  fontWeight: 700,
-                  fontSize: "14px",
-                  cursor: "pointer",
-                  opacity: status === "sending" ? 0.7 : 1,
-                }}
-              >
-                {status === "sending" ? "Отправляю…" : "Получить ссылку"}
-              </button>
-              {status === "error" && (
-                <p
-                  style={{
-                    fontSize: "13px",
-                    color: "#c0392b",
-                    marginTop: "14px",
-                  }}
-                >
-                  Что-то пошло не так, попробуй ещё раз.
-                </p>
-              )}
-              <p
-                style={{
-                  fontSize: "12px",
-                  lineHeight: 1.5,
-                  color: "var(--ink-faint)",
-                  margin: "18px 0 0",
-                  textAlign: "center",
-                }}
-              >
-                Продолжая, вы соглашаетесь с условиями использования сервиса.
-              </p>
-            </form>
-          )}
-        </div>
+            >
+              Отправить код на другую почту
+            </button>
+          </form>
+        )}
       </div>
     </div>
   );
 }
+
+const labelStyle: React.CSSProperties = {
+  fontSize: "11px",
+  fontWeight: 700,
+  textTransform: "uppercase",
+  letterSpacing: "1.2px",
+  color: "var(--ink-faint)",
+  display: "block",
+  marginBottom: "8px",
+};
+
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  border: "1px solid var(--border)",
+  borderRadius: "14px",
+  padding: "14px 16px",
+  fontSize: "15px",
+  background: "var(--bg-page)",
+  outline: "none",
+  marginBottom: "18px",
+  fontFamily: "var(--font-sans)",
+  color: "var(--ink)",
+};
+
+const buttonStyle: React.CSSProperties = {
+  width: "100%",
+  background: "var(--black)",
+  color: "#fff",
+  border: "none",
+  borderRadius: "999px",
+  padding: "14px",
+  fontWeight: 700,
+  fontSize: "14px",
+  cursor: "pointer",
+};
+
+const errorStyle: React.CSSProperties = {
+  fontSize: "13px",
+  color: "#c0392b",
+  marginTop: "14px",
+};
